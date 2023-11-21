@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Client Login</title>
+    
+    <style>
+        #form {
+            padding: 6px;
+        }
+        button {
+            padding : 5px;
+        	background-color: rgb(20, 131, 242);
+            border : none;
+            color : white;
+        }
+    </style>
+</head>
+<body>
+    <h2>
+        Connexion
+    </h2>
+
+    <div id="search">
+        <form id="loginForm" method="post">
+            <input type="text" id="identifiant" placeholder="Identifiant..."/>
+            <br><br>
+            <input type="text" id="mdp" placeholder="Mot de passe..."/>
+            <br><br>
+            <button type="button" onclick="envoyerFormulaire()">
+                Confirmer
+            </button>
+            <!-- <input type="submit"/> -->
+        </form>
+    </div>
+    <br><br>
+    <div>
+        <h2>Authentification</h2>
+        <a href="#" onclick="authentificate()">Verifier</a>
+        <a href="#" onclick="deconnexion()" style="margin-left: 5px;">Deconnexion</a>
+    </div>
+</body>
+</html>
+
+<script>
+    function envoyerFormulaire() {
+        var identifiant = document.getElementById('identifiant').value;
+        var mdp = document.getElementById('mdp').value;
+
+        var donnees = {
+            identifiant: identifiant,
+            mdp: mdp
+        };
+
+        fetch('http://localhost:8080/utilisateurs/check', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(donnees)
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Traiter la réponse du serveur
+            console.log(data);
+
+            // Exemple : Afficher le message côté client
+            alert(data.message);
+
+            // ajouter le token au localStorage
+            localStorage.setItem("xtoken", data.token);
+
+            // Manipuler les données supplémentaires si nécessaire
+            var utilisateurInfo = data.utilisateurInfo;
+            console.log(utilisateurInfo);
+        })
+        .catch(error => {
+            console.error('Erreur lors de la connexion:', error);
+        });
+    }
+
+    function authentificate() {
+        console.log(localStorage.getItem("xtoken"));
+        fetch('http://localhost:8080/utilisateurs/auth', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem("xtoken")}` // Ajoutez le token dans l'en-tête Authorization
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Traiter la réponse du serveur
+            console.log(data);
+
+            // Exemple : Afficher le message côté client
+            alert(data.message);
+
+            // ajouter le token au localStorage
+            // localStorage.setItem("xtoken", data.token);
+        })
+        .catch(error => {
+            console.error('Erreur lors de la connexion:', error);
+        });
+    }
+
+    function deconnexion() {
+
+    }
+</script>
