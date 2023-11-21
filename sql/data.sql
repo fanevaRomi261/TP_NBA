@@ -56,7 +56,8 @@ INSERT INTO actions (points, nom) VALUES
     (2, 'Panier à deux points'),
     (3, 'Panier à trois points'),
     (1, 'Lancer franc'),
-    (0, 'Rebond');
+    (0, 'Rebond'),
+    (0, 'Passe decisif');
 
 
 -- Ajout de deux matchs
